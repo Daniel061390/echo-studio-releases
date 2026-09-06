@@ -1,0 +1,25 @@
+# Keeps the Echo backend awake and proves the bug-report pipe works.
+#
+# The Supabase free tier pauses a project after about a week without API
+# traffic; a paused project would silently swallow every alpha bug report.
+# This calls the public health function every two days with the anon key
+# (which is public by design: it ships inside the installer and the website).
+# A failing run emails the repo owner, which is the alert.
+name: keep-alive
+on:
+  schedule:
+    - cron: '23 6 */2 * *'
+  workflow_dispatch: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health check
+        env:
+          URL: https://xyyhnqhyikrsdskbjtlz.supabase.co/rest/v1/rpc/studio_report_health
+          KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5eWhucWh5aWtyc2Rza2JqdGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3NDQ2NDIsImV4cCI6MjA5MDMyMDY0Mn0.Y9BSX5tcVmFBGOzf80rbEYZYsT_QRp6Veh66t5xBpXU
+        run: |
+          body=$(curl -fsS -X POST "$URL" -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" -d '{}')
+          echo "$body"
+          echo "$body" | grep -q '"ok" *: *true' || { echo "health check did not return ok:true"; exit 1; }
+          echo "$body" | grep -q '"submit_fn" *: *true' || { echo "submit_bug_report is missing"; exit 1; }
