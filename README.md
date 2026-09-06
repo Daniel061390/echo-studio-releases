@@ -9,7 +9,7 @@ Release downloads for [Echo Studio](https://echomana.com/studio/), the desktop a
 - **In the app:** press **Report a problem** in the footer, or **Send a report about this** under any error. It sends the app's diagnostic log with one click and gives you a reference like `ECHO-3F9A2C1B`. The dialog shows exactly what will be sent; it never includes your book text, its title, or file names.
 - **If the app never opened** (the installer would not run, Windows blocked it): use the form at [echomana.com/studio/#report](https://echomana.com/studio/#report).
 - **If you have a GitHub account,** [issues](../../issues) work too. Please do not paste your book text into a public issue.
-- The log lives at `%APPDATA%\Echo Studio\logs\studio.log` if anyone asks you for it.
+- The log lives at `%APPDATA%\echo-studio\logs\studio.log` if anyone asks you for it.
 
 ## Install
 
